@@ -1,1 +1,18 @@
-spring.application.name=rest-springBoot-java
+spring:
+  application:
+    name: rest-springBoot-java
+
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=rest_springBoot_java;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: 123
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    show-sql: false
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+
+
+
