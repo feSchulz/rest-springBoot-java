@@ -1,6 +1,8 @@
 package br.com.feSchulz.services;
 
+import br.com.feSchulz.data.dto.PersonDTO;
 import br.com.feSchulz.exception.ResourceNotFoundException;
+import br.com.feSchulz.mapper.ObjectMapper;
 import br.com.feSchulz.model.Person;
 import br.com.feSchulz.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -21,28 +23,29 @@ public class PersonServices {
     PersonRepository repository;
 
 
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
 
         logger.info("Finding all People!");
 
-        return repository.findAll();
+        return ObjectMapper.parseListObjects(repository.findAll(),PersonDTO.class);
     }
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
+        Person entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
-        return repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+        return ObjectMapper.parseObject(entity,PersonDTO.class);
     }
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
 
         logger.info("Creating one Person!");
-
-        return repository.save(person);
+        Person entity = ObjectMapper.parseObject(person,Person.class);
+        return ObjectMapper.parseObject(repository.save(entity),PersonDTO.class);
     }
 
-    public Person update(Person person) {
+    public PersonDTO update(PersonDTO person) {
 
         logger.info("Updating one Person!");
         Person entity = repository.findById(person.getId())
@@ -53,7 +56,7 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(person);
+        return ObjectMapper.parseObject(repository.save(entity),PersonDTO.class);
     }
 
     public void delete(Long id) {
