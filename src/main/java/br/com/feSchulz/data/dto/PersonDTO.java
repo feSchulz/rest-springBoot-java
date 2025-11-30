@@ -1,7 +1,11 @@
 package br.com.feSchulz.data.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import org.springframework.hateoas.Link;
 
 
 public class PersonDTO implements Serializable {
@@ -12,6 +16,11 @@ public class PersonDTO implements Serializable {
     private String lastName;
     private String address;
     private String gender;
+    private List<Link> links;
+
+    public PersonDTO() {
+        this.links = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
@@ -53,14 +62,23 @@ public class PersonDTO implements Serializable {
         this.gender = gender;
     }
 
+    public void add(Link _links) {
+        this.links.add(_links);
+    }
+    public  List<Link> getLinks() {
+        return links;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof PersonDTO person)) return false;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
+        if (this == o) return true;
+        if (!(o instanceof PersonDTO personDTO)) return false;
+        return Objects.equals(getId(), personDTO.getId()) && Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects.equals(getLastName(), personDTO.getLastName()) && Objects.equals(getAddress(), personDTO.getAddress()) && Objects.equals(getGender(), personDTO.getGender()) && Objects.equals(links, personDTO.links);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), links);
     }
+
 }
