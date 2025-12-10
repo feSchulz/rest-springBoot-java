@@ -1,51 +1,64 @@
 package br.com.feSchulz.controllers;
-import br.com.feSchulz.data.dto.PersonDTO;
-import br.com.feSchulz.services.PersonServices;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import br.com.feSchulz.controllers.docs.PersonControllerDocs;
+import br.com.feSchulz.data.dto.PersonDTO;
+import br.com.feSchulz.services.PersonServices;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/person/v1")
-public class PersonController {
-//    http://localhost:8080/api/person/v1?mediaType=xml {usado no header da requisicao}
+@Tag(name = "pessoas", description = "Endpoints Para gerênciamento de pessoas")
+public class PersonController implements PersonControllerDocs {
+
     @Autowired
     private PersonServices service;
 
-
-    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
+    @Override
     public List<PersonDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping(value = "/{id}",
-        produces =  { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE}
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
+    @Override
     public PersonDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
 
     @PostMapping(
-        consumes =  { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE},
-        produces =  { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE}
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
+    @Override
     public PersonDTO create(@RequestBody PersonDTO person) {
         return service.create(person);
     }
 
     @PutMapping(
-        consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE},
-        produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_YAML_VALUE}
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
-    public PersonDTO update(@RequestBody PersonDTO person) {
+    @Override
+   public PersonDTO update(@RequestBody PersonDTO person) {
         return service.update(person);
     }
 
-
     @DeleteMapping(value = "/{id}")
+    @Override
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
